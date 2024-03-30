@@ -1,0 +1,26 @@
+{
+  "name": "scadjs-utils",
+  "version": "1.0.0",
+  "description": "Utility functions for scad-js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gutterwock/scadjs-utils.git"
+  },
+  "author": "gutterwock",
+  "license": "GNU",
+  "bugs": {
+    "url": "https://github.com/gutterwock/scadjs-utils/issues"
+  },
+  "homepage": "https://github.com/gutterwock/scadjs-utils#readme",
+  "dependencies": {
+    "scad-js": "^0.5.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.55.0",
+    "jest": "^29.7.0"
+  }
+}
