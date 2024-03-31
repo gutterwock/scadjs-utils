@@ -3,14 +3,14 @@ class Solid {
 		children = [],
     materialize = () => {},
 		name = "solid",
-		position = [0, 0, 0],
+		origin = [0, 0, 0],
 		pointsOfInterest = {},
 		transformations = [],
 	}) {
 		this.children = children;
     this.materialize = materialize;
 		this.name = name;
-		this.position = position;
+		this.origin = origin;
 		this.pointsOfInterest = pointsOfInterest;
 		this.transformations = transformations;
 
