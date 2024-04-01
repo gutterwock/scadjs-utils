@@ -12,7 +12,7 @@ class Cube extends Solid {
     this.materialize = () => { return scad.cube(this.dimensions); };
     this.name = name;
     this.origin = origin;
-    this.pointsOfInterest = []; // TODO: add points for cube
+    this.pointsOfInterest = {};
     this.transformations = transformations;
 
     // TODO: multi transform based on transformations
