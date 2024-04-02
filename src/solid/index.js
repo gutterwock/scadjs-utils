@@ -12,11 +12,14 @@ class Solid {
 		this.name = name;
 		this.origin = origin;
 		this.pointsOfInterest = pointsOfInterest;
+    this.result = [];
 		this.transformations = transformations;
 
-    this.render = async () => {
-      await this.materialize();
-      await Promise.all(children.map(async (solid) => { await solid.render() }));
+    this.render = () => {
+      this.result = [
+        this.materialize(),
+        ...children.map(async (solid) => { await solid.render() })
+      ];
     };
 	};
 };

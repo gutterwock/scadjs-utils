@@ -1,3 +1,6 @@
+const scad = require("scad-js");
+const fs = require("fs");
+
 // TODO: handle the points of interest
 const multiTransform = (solid, operations) => {
   let result = solid;
@@ -19,6 +22,16 @@ const multiTransform = (solid, operations) => {
   return result;
 };
 
+const writeToFile = ({ fileName, fn, solids }) => {
+  fs.writeFileSync(
+    fileName,
+    scad.union(
+      ...solids.map(({ result }) => result).flat()
+    ).serialize({ $fn: fn })
+  );
+};
+
 module.exports = {
-  multiTransform
+  multiTransform,
+  writeToFile
 };

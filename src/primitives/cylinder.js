@@ -8,17 +8,14 @@ class Cylinder extends Solid {
 		origin = [0, 0, 0],
 		transformations = [],
 	}) {
+    super({
+      materialize: () => { return scad.cylinder(this.dimensions); },
+      name,
+      origin,
+      pointsOfInterest: {},
+      transformations
+    });
     this.dimensions = dimensions;
-    this.materialize = () => { return scad.cylinder(this.dimensions); };
-    this.name = name;
-    this.origin = origin;
-    this.pointsOfInterest = {};
-    this.transformations = transformations;
-
-    // TODO: multi transform based on transformations
-    this.render = async () => {
-      await this.materialize();
-    };
 	};
 };
 
