@@ -9,13 +9,14 @@ class Sphere extends Solid {
 		transformations = [],
 	}) { 
     super({
-      materialize: () => { return scad.sphere(this.dimensions); },
+      materialize: () => { return scad.sphere(this.dimensions, { $fn: this.fn }); },
       name,
       origin,
       pointsOfInterest: {},
       transformations
     });
     this.dimensions = dimensions;
+    fn = 10,
 	};
 };
 
