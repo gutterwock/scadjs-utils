@@ -24,14 +24,31 @@ const multiTransform = (solid, operations) => {
 
 const extendLine = (point1, point2, distance) => {
   const [x1, y1, z1] = point1;
-  const [x2, y2, z3] = point2;
-  const dx = x2 - x1;
-  const dydx = (y2 - y1) / dx;
-  const dzdx = (z2 - z1) / dx;
-  const xExtend = distance / (Math.sqrt(1 + dydx ** 2 + dzdx ** 2));
-  const yExtend = xExtend * dydx;
-  const zExtend = xExtend * dzdx;
-  return [x2 + xExtend, y2 + yExtend, z2 + zExtend];
+  const [x2, y2, z2] = point2;
+
+  
+  const distanceBetweenPoints = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2);
+  const extendedDistance = distanceBetweenPoints + distance;
+  const deltas = [x2 - x1, y2 - y1, z2 - z1];
+  const primary = deltas.find((delta) => delta != 0);
+  const [dx, dy, dz] = deltas;
+  const dxd = dx / primary;
+  const dyd = dy / primary;
+  const dzd = dz / primary;
+  const xExtend = (dx > 0 ? 1 : -1) * (dx === 0 ? 0 : extendedDistance) / (Math.sqrt(1 + dyd ** 2 + dzd ** 2));
+  const yExtend = (dy > 0 ? 1 : -1) * (dy === 0 ? 0 : extendedDistance) / (Math.sqrt(1 + dxd ** 2 + dzd ** 2));
+  const zExtend = (dz > 0 ? 1 : -1) * (dz === 0 ? 0 : extendedDistance) / (Math.sqrt(1 + dxd ** 2 + dyd ** 2));
+
+
+
+  if (point1.includes(-2) || point2.includes(-2)) {
+
+    console.log(point1)
+    console.log(point2)
+    console.log(distanceBetweenPoints, extendedDistance, deltas, xExtend, yExtend, zExtend)
+    console.log("\n")
+  }
+  return [x1 + xExtend, y1 + yExtend, z1 + zExtend];
 };
 
 const writeToFile = ({ fileName, fn, solids }) => {
