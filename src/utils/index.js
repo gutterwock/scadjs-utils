@@ -25,30 +25,16 @@ const multiTransform = (solid, operations) => {
 const extendLine = (point1, point2, distance) => {
   const [x1, y1, z1] = point1;
   const [x2, y2, z2] = point2;
-
-  
   const distanceBetweenPoints = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2);
-  const extendedDistance = distanceBetweenPoints + distance;
-  const deltas = [x2 - x1, y2 - y1, z2 - z1];
-  const primary = deltas.find((delta) => delta != 0);
-  const [dx, dy, dz] = deltas;
-  const dxd = dx / primary;
-  const dyd = dy / primary;
-  const dzd = dz / primary;
-  const xExtend = (dx > 0 ? 1 : -1) * (dx === 0 ? 0 : extendedDistance) / (Math.sqrt(1 + dyd ** 2 + dzd ** 2));
-  const yExtend = (dy > 0 ? 1 : -1) * (dy === 0 ? 0 : extendedDistance) / (Math.sqrt(1 + dxd ** 2 + dzd ** 2));
-  const zExtend = (dz > 0 ? 1 : -1) * (dz === 0 ? 0 : extendedDistance) / (Math.sqrt(1 + dxd ** 2 + dyd ** 2));
-
-
-
-  if (point1.includes(-2) || point2.includes(-2)) {
-
-    console.log(point1)
-    console.log(point2)
-    console.log(distanceBetweenPoints, extendedDistance, deltas, xExtend, yExtend, zExtend)
-    console.log("\n")
-  }
-  return [x1 + xExtend, y1 + yExtend, z1 + zExtend];
+  const proportion = (distance + distanceBetweenPoints) / distanceBetweenPoints;
+  
+  const [dx, dy, dz] = [x2 - x1, y2 - y1, z2 - z1];
+  console.log(distanceBetweenPoints, distance, proportion, z1, dz)
+  return [
+    proportion * dx + x1,
+    proportion * dy + y1,
+    proportion * dz + z1,
+  ];
 };
 
 const writeToFile = ({ fileName, fn, solids }) => {
@@ -56,7 +42,11 @@ const writeToFile = ({ fileName, fn, solids }) => {
     fileName,
     scad.union(
       ...solids.map(({ result }) => result).flat()
-    ).serialize({ $fn: fn })
+    )
+      .serialize({ $fn: fn })
+      .split("\n") // for compatibility with newer openscad versions
+      .map((line) => line.replace(/(polyhedron\([^\)]*)paths( =)/, "$1" + "faces" + "$2"))
+      .join("\n")
   );
 };
 
