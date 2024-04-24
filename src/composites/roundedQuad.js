@@ -1,6 +1,6 @@
 const scad = require("scad-js");
 const Solid = require("../solid");
-const { extendLine } = require("../utils");
+const { reduceMagnitude } = require("../utils");
 
 class RoundedQuad extends Solid {
 	constructor({
@@ -21,37 +21,22 @@ class RoundedQuad extends Solid {
 		transformations = [],
 	}) {
 		super({
-			// todo: add polyhedra
 			materialize: () => {
-        // pairs of corners used to calculate vertex positions
-        const vertexAdjustmentIndices = [
-          [[3, 0], [1, 0], [4, 0]],
-          [[2, 1], [0, 1], [5, 1]],
-          [[1, 2], [3, 2], [6, 2]],
-          [[0, 3], [2, 3], [7, 3]],
-          [[7, 4], [5, 4], [0, 4]],
-          [[6, 5], [4, 5], [1, 5]],
-          [[5, 6], [7, 6], [2, 6]],
-          [[4, 7], [6, 7], [3, 7]],
-        ];
-
-        const vertexPositions = vertexAdjustmentIndices.map(([xPair, yPair, zPair]) => {
-          const [x,,] = extendLine(corners[xPair[0]], corners[xPair[1]], -bevelRadius);
-          const [,y,] = extendLine(corners[yPair[0]], corners[yPair[1]], -bevelRadius);
-          const [,,z] = extendLine(corners[zPair[0]], corners[zPair[1]], -bevelRadius);
-          return [x, y, z];
+        const vertexPositions = corners.map(([x, y, z]) => {
+          return [
+            reduceMagnitude(x, bevelRadius),
+            reduceMagnitude(y, bevelRadius),
+            reduceMagnitude(z, bevelRadius)
+          ];
         });
-// console.log(corners)
-// console.log(vertexPositions)
         const useCorner = [
-          // [true, false, false],
+          [true, false, false],
           [false, true, false],
-          // [false, false, true],
+          [false, false, true],
         ];
-
         return scad.union(
-          // scad.hull(
-            scad.union(
+          scad.hull(
+          // scad.union(
             ...vertexPositions.map((position) => {
               return scad.sphere(this.bevelRadius, { $fn: this.fn }).translate(position);
             })

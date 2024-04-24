@@ -25,16 +25,25 @@ const multiTransform = (solid, operations) => {
 const extendLine = (point1, point2, distance) => {
   const [x1, y1, z1] = point1;
   const [x2, y2, z2] = point2;
-  const distanceBetweenPoints = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2);
-  const proportion = (distance + distanceBetweenPoints) / distanceBetweenPoints;
-  
   const [dx, dy, dz] = [x2 - x1, y2 - y1, z2 - z1];
-  console.log(distanceBetweenPoints, distance, proportion, z1, dz)
+  const distanceBetweenPoints = Math.sqrt((dx) ** 2 + (dy) ** 2 + (dz) ** 2);
+  const [vx, vy, vz] = [dx / distanceBetweenPoints, dy / distanceBetweenPoints, dz / distanceBetweenPoints];
+
   return [
-    proportion * dx + x1,
-    proportion * dy + y1,
-    proportion * dz + z1,
+    distance * vx + x2,
+    distance * vy + y2,
+    distance * vz + z2,
   ];
+};
+
+const reduceMagnitude = (val, magnitude) => {
+  if (val === 0) {
+    return 0;
+  } else if (val < 0) {
+    return val + magnitude;
+  } else {
+    return val - magnitude;
+  }
 };
 
 const writeToFile = ({ fileName, fn, solids }) => {
@@ -53,5 +62,6 @@ const writeToFile = ({ fileName, fn, solids }) => {
 module.exports = {
   extendLine,
   multiTransform,
+  reduceMagnitude,
   writeToFile
 };
