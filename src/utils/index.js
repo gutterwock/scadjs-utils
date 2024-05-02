@@ -40,10 +40,18 @@ const increaseMagnitude = (val, magnitude) => {
   if (val === 0) {
     return 0;
   } else if (val < 0) {
-    return val + magnitude;
-  } else {
     return val - magnitude;
+  } else {
+    return val + magnitude;
   }
+};
+
+const polarToCartesian = (r, angle) => {
+  const radians = angle * Math.PI / 180;
+  return [
+    r * Math.cos(radians),
+    r * Math.sin(radians)
+  ];
 };
 
 const writeToFile = ({ fileName, fn, solids }) => {
@@ -62,6 +70,7 @@ const writeToFile = ({ fileName, fn, solids }) => {
 module.exports = {
   extendLine,
   multiTransform,
+  polarToCartesian,
   increaseMagnitude,
   writeToFile
 };
