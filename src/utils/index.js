@@ -36,7 +36,7 @@ const extendLine = (point1, point2, distance) => {
   ];
 };
 
-const reduceMagnitude = (val, magnitude) => {
+const increaseMagnitude = (val, magnitude) => {
   if (val === 0) {
     return 0;
   } else if (val < 0) {
@@ -62,6 +62,6 @@ const writeToFile = ({ fileName, fn, solids }) => {
 module.exports = {
   extendLine,
   multiTransform,
-  reduceMagnitude,
+  increaseMagnitude,
   writeToFile
 };

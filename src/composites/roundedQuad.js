@@ -1,6 +1,6 @@
 const scad = require("scad-js");
 const Solid = require("../solid");
-const { reduceMagnitude } = require("../utils");
+const { increaseMagnitude } = require("../utils");
 
 class RoundedQuad extends Solid {
 	constructor({
@@ -24,9 +24,9 @@ class RoundedQuad extends Solid {
 			materialize: () => {
         const vertexPositions = corners.map(([x, y, z]) => {
           return [
-            reduceMagnitude(x, bevelRadius),
-            reduceMagnitude(y, bevelRadius),
-            reduceMagnitude(z, bevelRadius)
+            increaseMagnitude(x, -bevelRadius),
+            increaseMagnitude(y, -bevelRadius),
+            increaseMagnitude(z, -bevelRadius)
           ];
         });
         const useCorner = [
