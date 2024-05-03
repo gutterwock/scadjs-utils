@@ -1,3 +1,5 @@
+const { multiTransform } = require("../utils");
+
 class Solid {
 	constructor ({
 		children = [],
@@ -17,8 +19,8 @@ class Solid {
 
     this.render = () => {
       this.result = [
-        this.materialize(),
-        ...children.map(async (solid) => { await solid.render() })
+        multiTransform(this.materialize(), transformations),
+        ...children.map(async (solid) => { solid.render() })
       ];
     };
 	};
