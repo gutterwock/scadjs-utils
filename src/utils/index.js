@@ -24,14 +24,34 @@ const multiTransform = (solid, operations) => {
 
 const extendLine = (point1, point2, distance) => {
   const [x1, y1, z1] = point1;
-  const [x2, y2, z3] = point2;
-  const dx = x2 - x1;
-  const dydx = (y2 - y1) / dx;
-  const dzdx = (z2 - z1) / dx;
-  const xExtend = distance / (Math.sqrt(1 + dydx ** 2 + dzdx ** 2));
-  const yExtend = xExtend * dydx;
-  const zExtend = xExtend * dzdx;
-  return [x2 + xExtend, y2 + yExtend, z2 + zExtend];
+  const [x2, y2, z2] = point2;
+  const [dx, dy, dz] = [x2 - x1, y2 - y1, z2 - z1];
+  const distanceBetweenPoints = Math.sqrt((dx) ** 2 + (dy) ** 2 + (dz) ** 2);
+  const [vx, vy, vz] = [dx / distanceBetweenPoints, dy / distanceBetweenPoints, dz / distanceBetweenPoints];
+
+  return [
+    distance * vx + x2,
+    distance * vy + y2,
+    distance * vz + z2,
+  ];
+};
+
+const increaseMagnitude = (val, magnitude) => {
+  if (val === 0) {
+    return 0;
+  } else if (val < 0) {
+    return val - magnitude;
+  } else {
+    return val + magnitude;
+  }
+};
+
+const polarToCartesian = (r, angle) => {
+  const radians = angle * Math.PI / 180;
+  return [
+    r * Math.cos(radians),
+    r * Math.sin(radians)
+  ];
 };
 
 const writeToFile = ({ fileName, fn, solids }) => {
@@ -39,12 +59,18 @@ const writeToFile = ({ fileName, fn, solids }) => {
     fileName,
     scad.union(
       ...solids.map(({ result }) => result).flat()
-    ).serialize({ $fn: fn })
+    )
+      .serialize({ $fn: fn })
+      .split("\n") // for compatibility with newer openscad versions
+      .map((line) => line.replace(/(polyhedron\([^\)]*)paths( =)/, "$1" + "faces" + "$2"))
+      .join("\n")
   );
 };
 
 module.exports = {
   extendLine,
   multiTransform,
+  polarToCartesian,
+  increaseMagnitude,
   writeToFile
 };

@@ -20,9 +20,11 @@ class RoundedCylinder extends Solid {
 				const outerZ = 0 - (this.roundedEdges[0] ? bevelRadius : 0) + (this.roundedEdges[1] ? bevelRadius : 0);
 				return scad.union(
 					scad.cylinder(height, [innerR1, innerR2], { $fn: this.fn }),
-					scad.cylinder(outerHeight, [r1, r2], { $fn: this.fn }).translate([0, 0, outerZ]),
-					scad.circle(bevelRadius, { $fn: this.fn }).translate([r1 - bevelRadius, 0, 0]).rotate_extrude(360, { $fn: this.fn }).translate([0, 0, -height / 2 + bevelRadius]),
-					scad.circle(bevelRadius, { $fn: this.fn }).translate([r2 - bevelRadius, 0, 0]).rotate_extrude(360, { $fn: this.fn }).translate([0, 0, height / 2 - bevelRadius])
+					// scad.cylinder(outerHeight, [r1, r2], { $fn: this.fn }).translate([0, 0, outerZ]),
+          scad.hull(
+					  scad.circle(bevelRadius, { $fn: this.fn }).translate([r1 - bevelRadius, 0, 0]).rotate_extrude(360, { $fn: this.fn }).translate([0, 0, -height / 2 + bevelRadius]),
+					  scad.circle(bevelRadius, { $fn: this.fn }).translate([r2 - bevelRadius, 0, 0]).rotate_extrude(360, { $fn: this.fn }).translate([0, 0, height / 2 - bevelRadius])
+          )
 				);
 			},
 			name,
