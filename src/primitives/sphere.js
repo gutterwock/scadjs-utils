@@ -16,7 +16,7 @@ class Sphere extends Solid {
       transformations
     });
     this.dimensions = dimensions;
-    fn = 10,
+    this.fn = 10;
 	};
 };
 
