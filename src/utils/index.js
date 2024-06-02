@@ -13,7 +13,7 @@ const multiTransform = (solid, operations) => {
         result = result.rotate(params);
         break;
       case "color":
-        result = result.color(params);
+        result = result.color(...params);
         break;
       default:
         throw new Error(`Invalid operation: ${operation}`);
