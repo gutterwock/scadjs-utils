@@ -22,7 +22,18 @@ class RoundedQuad extends Solid {
 	}) {
 		super({
 			materialize: () => {
-        const vertexPositions = corners.map(([x, y, z]) => {
+        const minCoordinates = [-this.bevelRadius, -this.bevelRadius, -this.bevelRadius];
+        corners.forEach((coordinates) => {
+          coordinates.forEach((coordinate, index) => {
+            if (coordinate < minCoordinates[index]) {
+              minCoordinates[index] = coordinate;
+            }
+          });
+        });
+        const adjustedCorners = corners.map((coordinates) => coordinates.map((coordinate, index) => coordinate + minCoordinates[index]));
+        const unadjustCoordinates = (coordinates) => coordinates.map((coordinate, index) => coordinate - minCoordinates[index]);
+
+        const vertexPositions =adjustedCorners.map(([x, y, z]) => {
           return [
             increaseMagnitude(x, -bevelRadius),
             increaseMagnitude(y, -bevelRadius),
@@ -38,17 +49,17 @@ class RoundedQuad extends Solid {
           scad.hull(
           // scad.union(
             ...vertexPositions.map((position) => {
-              return scad.sphere(this.bevelRadius, { $fn: this.fn }).translate(position);
+              return scad.sphere(this.bevelRadius, { $fn: this.fn }).translate(unadjustCoordinates(position));
             })
           ),
           scad.union(
             ...useCorner.map(([useX, useY, useZ]) => {
-              const points = corners.map(([x, y, z], index) => {
-                return [
+              const points = adjustedCorners.map(([x, y, z], index) => {
+                return unadjustCoordinates([
                   useX ? x : vertexPositions[index][0],
                   useY ? y : vertexPositions[index][1],
                   useZ ? z : vertexPositions[index][2]
-                ];
+                ]);
               });
               const paths = [
                 [0, 1, 2, 3],

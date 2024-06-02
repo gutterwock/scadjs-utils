@@ -3,7 +3,7 @@ const RoundedCylinder = require("./roundedCylinder");
 const Solid = require("../solid");
 const { polarToCartesian } = require("../utils");
 
-class RoundedCorner extends Solid  {
+class RoundedCorner extends Solid {
 	constructor({
 		angle = 90,
 		bevelRadius = .25,

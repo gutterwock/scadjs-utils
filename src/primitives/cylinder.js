@@ -4,13 +4,13 @@ const Solid = require("../solid");
 class Cylinder extends Solid {
 	constructor({
 		dimensions = [1, [1, 1]],
-    fn,
+    fn = 10,
 		name = "cylinder",
 		origin = [0, 0, 0],
 		transformations = [],
 	}) {
     super({
-      materialize: () => { return scad.cylinder(this.dimensions, { $fn: this.fn }); },
+      materialize: () => { return scad.cylinder(...dimensions, { $fn: this.fn }); },
       name,
       origin,
       pointsOfInterest: {},
