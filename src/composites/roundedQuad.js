@@ -1,6 +1,6 @@
 const scad = require("scad-js");
 const Solid = require("../solid");
-const { increaseMagnitude } = require("../utils");
+const { extendLine } = require("../utils");
 
 class RoundedQuad extends Solid {
 	constructor({
@@ -22,22 +22,22 @@ class RoundedQuad extends Solid {
 	}) {
 		super({
 			materialize: () => {
-        const minCoordinates = [-this.bevelRadius, -this.bevelRadius, -this.bevelRadius];
-        corners.forEach((coordinates) => {
-          coordinates.forEach((coordinate, index) => {
-            if (coordinate < minCoordinates[index]) {
-              minCoordinates[index] = coordinate;
-            }
-          });
-        });
-        const adjustedCorners = corners.map((coordinates) => coordinates.map((coordinate, index) => coordinate + minCoordinates[index]));
-        const unadjustCoordinates = (coordinates) => coordinates.map((coordinate, index) => coordinate - minCoordinates[index]);
 
-        const vertexPositions =adjustedCorners.map(([x, y, z]) => {
+        const cornerPairs = [
+          [3, 1, 4],
+          [2, 0, 5],
+          [1, 3, 6],
+          [0, 2, 7],
+          [7, 5, 0],
+          [6, 4, 1],
+          [5, 7, 2],
+          [4, 6, 3],
+        ];
+        const vertexPositions = cornerPairs.map(([xIndex, yIndex, zIndex], cornerIndex) => {
           return [
-            increaseMagnitude(x, -bevelRadius),
-            increaseMagnitude(y, -bevelRadius),
-            increaseMagnitude(z, -bevelRadius)
+            extendLine([corners[xIndex][0], corners[cornerIndex][1], corners[cornerIndex][2]], corners[cornerIndex], -bevelRadius)[0],
+            extendLine([corners[cornerIndex][0], corners[yIndex][1], corners[cornerIndex][2]], corners[cornerIndex], -bevelRadius)[1],
+            extendLine([corners[cornerIndex][0], corners[cornerIndex][1], corners[zIndex][2]], corners[cornerIndex], -bevelRadius)[2],
           ];
         });
         const useCorner = [
@@ -49,17 +49,17 @@ class RoundedQuad extends Solid {
           scad.hull(
           // scad.union(
             ...vertexPositions.map((position) => {
-              return scad.sphere(this.bevelRadius, { $fn: this.fn }).translate(unadjustCoordinates(position));
+              return scad.sphere(this.bevelRadius, { $fn: this.fn }).translate(position);
             })
           ),
           scad.union(
             ...useCorner.map(([useX, useY, useZ]) => {
-              const points = adjustedCorners.map(([x, y, z], index) => {
-                return unadjustCoordinates([
+              const points = corners.map(([x, y, z], index) => {
+                return [
                   useX ? x : vertexPositions[index][0],
                   useY ? y : vertexPositions[index][1],
                   useZ ? z : vertexPositions[index][2]
-                ]);
+                ];
               });
               const paths = [
                 [0, 1, 2, 3],
