@@ -35,9 +35,9 @@ class RoundedQuad extends Solid {
         ];
         const vertexPositions = cornerPairs.map(([xIndex, yIndex, zIndex], cornerIndex) => {
           return [
-            extendLine([corners[xIndex][0], corners[cornerIndex][1], corners[cornerIndex][2]], corners[cornerIndex], -bevelRadius)[0],
-            extendLine([corners[cornerIndex][0], corners[yIndex][1], corners[cornerIndex][2]], corners[cornerIndex], -bevelRadius)[1],
-            extendLine([corners[cornerIndex][0], corners[cornerIndex][1], corners[zIndex][2]], corners[cornerIndex], -bevelRadius)[2],
+            extendLine([corners[xIndex][0], corners[cornerIndex][1], corners[cornerIndex][2]], corners[cornerIndex], -bevelRadius)[0] || corners[cornerIndex][0],
+            extendLine([corners[cornerIndex][0], corners[yIndex][1], corners[cornerIndex][2]], corners[cornerIndex], -bevelRadius)[1] || corners[cornerIndex][1],
+            extendLine([corners[cornerIndex][0], corners[cornerIndex][1], corners[zIndex][2]], corners[cornerIndex], -bevelRadius)[2] || corners[cornerIndex][2],
           ];
         });
         const useCorner = [
