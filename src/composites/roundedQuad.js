@@ -1,6 +1,6 @@
 const scad = require("scad-js");
 const Solid = require("../solid");
-const { extendLine } = require("../utils");
+const { extendLine, increaseMagnitude } = require("../utils");
 
 class RoundedQuad extends Solid {
 	constructor({
@@ -22,7 +22,6 @@ class RoundedQuad extends Solid {
 	}) {
 		super({
 			materialize: () => {
-
 				const cornerPairs = [
 					[3, 1, 4],
 					[2, 0, 5],
