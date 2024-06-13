@@ -1,6 +1,10 @@
 const scad = require("scad-js");
 const fs = require("fs");
 
+const addVectors = (v1, v2) => {
+  return v1.map((val, index) => val +(v2[index] || 0));
+};
+
 // TODO: handle the points of interest
 const multiTransform = (solid, operations) => {
   let result = solid;
@@ -68,6 +72,7 @@ const writeToFile = ({ fileName, fn, solids }) => {
 };
 
 module.exports = {
+  addVectors,
   extendLine,
   multiTransform,
   polarToCartesian,
