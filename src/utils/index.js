@@ -77,5 +77,5 @@ module.exports = {
   multiTransform,
   polarToCartesian,
   increaseMagnitude,
-  writeToFile
+  writeToFile,
 };
