@@ -1,4 +1,5 @@
-const { calculateDistance, determineSigns, scaleVectors } = require("./vector");
+const { toRadians } = require("./geometry");
+const { calculateDistance, calculateDotProduct, determineSigns, normalizeVector, scaleVectors } = require("./vector");
 
 const useSelectedIndices = (originalPoint, newValues, indices) => {
 	const newPoint = [...originalPoint];
@@ -35,6 +36,42 @@ const bevelize = (points, bevelLength, indices = [0, 1]) => {
 	return result;
 };
 
+//for cases where distance to next point is less than bevelLength, use at most half of the distance
+const bevelizeFace = ({ threshold = 90, bevelLength, points }) => {
+	const thresholdRadians = toRadians(threshold);
+
+	const beveledPoints = [];
+
+	points.forEach((point, index) => {
+		const previousPoint = points[index === 0 ? points.length - 1 : index - 1];
+		const nextPoint = points[index == points.length - 1 ? 0 : index + 1];
+		const vectorPrevious = previousPoint.map((val, index) => val - point[index]);
+		const vectorNext = nextPoint.map((val, index) => val - point[index]);
+		const radians = Math.acos(
+			calculateDotProduct(
+				normalizeVector(vectorPrevious),
+				normalizeVector(vectorNext)
+			)
+		);
+		if (radians <= thresholdRadians) {
+			const previousOffsetSigns = determineSigns(point, previousPoint);
+			const nextOffsetSigns = determineSigns(point, nextPoint);
+
+			const offsetHypVector = [,,, bevelLength / (2 * Math.sin(radians / 2))];
+			const previousBevelVector = scaleVectors([...vectorPrevious, calculateDistance(previousPoint, point)], offsetHypVector);
+			const nextBevelVector = scaleVectors([...vectorNext, calculateDistance(nextPoint, point)], offsetHypVector);
+			beveledPoints.push(
+				point.map((val, index) => val + Math.abs(previousBevelVector[index]) * previousOffsetSigns[index]),
+				point.map((val, index) => val + Math.abs(nextBevelVector[index]) * nextOffsetSigns[index]),
+			);
+		} else {
+			beveledPoints.push(points[index]);
+		}
+	});
+	return beveledPoints;
+};
+
 module.exports = {
-	bevelize
+	bevelize,
+	bevelizeFace
 };

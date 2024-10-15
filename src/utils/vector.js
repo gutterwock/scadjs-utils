@@ -29,10 +29,22 @@ const determineSigns = (p0, p1) => {
 	return p0.map((val, index) => p1[index] < val ? -1 : 1);
 };
 
+const normalizeVector = (vector) => {
+	const magnitude = Math.sqrt(vector.reduce((acc, val) => acc + val ** 2, 0));
+	return vector.map((val) => val / magnitude);
+};
+
+const calculateDotProduct = (v1, v2) => {
+	requireEqualDimensions(v1, v2);
+	return v1.reduce((acc, val, index) => acc + val * v2[index], 0);
+};
+
 module.exports = {
 	addVectors,
 	calculateDistance,
+	calculateDotProduct,
+	determineSigns,
+	normalizeVector,
 	requireEqualDimensions,
 	scaleVectors,
-	determineSigns
 };
